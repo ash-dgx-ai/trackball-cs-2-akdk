@@ -42,10 +42,17 @@
             ;
     };
 
+    xy_to_scroll_mapper: xy_to_scroll_mapper {
+        compatible = "zmk,input-processor-code-mapper";
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_X INPUT_REL_Y>;
+        map = <INPUT_REL_HWHEEL INPUT_REL_WHEEL>;
+    };
+
     trackball_listener: trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-        input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>;
+        input-processors = <&xy_to_scroll_mapper>;
     };
 
     split_inputs {
