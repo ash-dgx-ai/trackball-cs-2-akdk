@@ -45,8 +45,7 @@
     trackball_listener: trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-        input-processors = <&zip_code_mapper INPUT_REL_Y INPUT_REL_WHEEL
-                            &zip_code_mapper INPUT_REL_X INPUT_REL_HWHEEL>;
+        xy-mode = "scroll";
     };
 
     split_inputs {
