@@ -41,6 +41,36 @@
             ;
     };
 
+    input_processors {
+        scaler_x: scaler_x {
+            compatible = "zmk,input-processor-scaler";
+            #input-processor-cells = <0>;
+            type = <INPUT_EV_REL>;
+            codes = <INPUT_REL_X>;
+            scale-multiplier = <1>;
+            scale-divisor = <1>;
+            track-remainders;
+        };
+
+        scaler_y: scaler_y {
+            compatible = "zmk,input-processor-scaler";
+            #input-processor-cells = <0>;
+            type = <INPUT_EV_REL>;
+            codes = <INPUT_REL_Y>;
+            scale-multiplier = <1>;
+            scale-divisor = <1>;
+            track-remainders;
+        };
+
+        xy_to_scroll: xy_to_scroll {
+            compatible = "zmk,input-processor-code-mapper";
+            #input-processor-cells = <0>;
+            type = <INPUT_EV_REL>;
+            map = <INPUT_REL_X INPUT_REL_HWHEEL
+                   INPUT_REL_Y INPUT_REL_WHEEL>;
+        };
+    };
+
     split_inputs {
         #address-cells = <1>;
         #size-cells = <0>;
@@ -91,6 +121,7 @@
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+        input-processors = <&scaler_x &scaler_y &xy_to_scroll>;
     };
 };
 
