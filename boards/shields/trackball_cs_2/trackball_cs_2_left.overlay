@@ -42,6 +42,12 @@
             ;
     };
 
+    trackball_listener: trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>;
+        input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>;
+    };
+
     split_inputs {
         #address-cells = <1>;
         #size-cells = <0>;
@@ -92,7 +98,6 @@
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
-        input-processors = <ZIP_CODE_MAPPER_WHEEL(INPUT_REL_Y INPUT_REL_X)>;
     };
 };
 
