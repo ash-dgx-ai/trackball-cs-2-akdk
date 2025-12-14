@@ -1,4 +1,3 @@
-
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
@@ -8,41 +7,41 @@
 
         layer_0 {
             label = "Base";
-            bindings =<
-                &none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none
+            bindings = <
+&kp Q  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &kp F  &kp J  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none                       &none  &none                       &none
             >;
         };
 
         layer_1 {
             label = "Lower";
-            bindings =<
-                &none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none
+            bindings = <
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none                       &none  &none                       &none
             >;
         };
 
         layer_2 {
             label = "Raise";
-            bindings =<
-                &none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none
+            bindings = <
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none                       &none  &none                       &none
             >;
         };
 
         layer_3 {
             label = "Adjust";
-            bindings =<
-                &none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none &none &none &none &none &none &none
-				&none &none &none &none
+            bindings = <
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none                       &none  &none                       &none
             >;
         };
     };
