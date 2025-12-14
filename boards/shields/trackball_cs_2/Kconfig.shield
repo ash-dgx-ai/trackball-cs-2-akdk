@@ -1,0 +1,4 @@
+config SHIELD_TRACKBALL_CS_2_LEFT
+    def_bool $(shields_list_contains,trackball_cs_2_left)
+config SHIELD_TRACKBALL_CS_2_RIGHT
+    def_bool $(shields_list_contains,trackball_cs_2_right)

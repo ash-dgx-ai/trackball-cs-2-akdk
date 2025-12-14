@@ -1,0 +1,14 @@
+
+file_format: "1"
+id: trackball_cs_2
+name: trackball_cs_2
+type: shield
+features:
+  - keys
+  - studio
+outputs:
+  - usb
+  - ble
+siblings:
+  - trackball_cs_2_left
+  - trackball_cs_2_right

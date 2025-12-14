@@ -1,0 +1,14 @@
+
+if SHIELD_TRACKBALL_CS_2_RIGHT
+
+config ZMK_KEYBOARD_NAME
+    default "trackball_cs_2"
+
+endif
+
+if SHIELD_TRACKBALL_CS_2_LEFT || SHIELD_TRACKBALL_CS_2_RIGHT
+
+config ZMK_SPLIT
+    default y
+
+endif
