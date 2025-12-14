@@ -7,6 +7,7 @@
         compatible = "zmk,keymap";
 
         layer_0 {
+            label = "Base";
             bindings =<
                 &none &none &none &none &none &none &none &none &none &none
 				&none &none &none &none &none &none &none &none &none &none
@@ -16,6 +17,7 @@
         };
 
         layer_1 {
+            label = "Lower";
             bindings =<
                 &none &none &none &none &none &none &none &none &none &none
 				&none &none &none &none &none &none &none &none &none &none
@@ -25,6 +27,7 @@
         };
 
         layer_2 {
+            label = "Raise";
             bindings =<
                 &none &none &none &none &none &none &none &none &none &none
 				&none &none &none &none &none &none &none &none &none &none
@@ -34,6 +37,7 @@
         };
 
         layer_3 {
+            label = "Adjust";
             bindings =<
                 &none &none &none &none &none &none &none &none &none &none
 				&none &none &none &none &none &none &none &none &none &none
