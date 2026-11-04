@@ -24,3 +24,15 @@ USB-C cable|1|
 |Diode|34|
 |Keycap|34|
 
+
+## Controller board (reverse-engineered)
+
+The wireless controller board is not included in the original Auto-KDK output.
+A reverse-engineered KiCad design compatible with this keyboard is in
+[`controller-kicad/`](controller-kicad/README.md).
+
+- 98.0 x 29.0 mm, 2-layer, bottom-side assembly
+- Ebyte E73-2G4M08S1C (JLCPCB C356849), TP4057 charger, USB-C, PH battery
+  connector, trackball FFC, DPDT power switch
+- JLCPCB Gerbers/BOM/CPL are included in `controller-kicad/`
+- Flash the Adafruit nRF52 UF2 bootloader via SWD (J4) before use.
