@@ -45,31 +45,17 @@ def main():
     ds = board.GetDesignSettings()
     ds.m_MinClearance = MM(0.1)
     ds.m_TrackMinWidth = MM(0.1)
-    ds.m_ViasMinSize = MM(0.4)
+    ds.m_ViasMinSize = MM(0.3)
+    ds.m_ViasMinAnnularWidth = MM(0.05)
     ds.m_MinThroughDrill = MM(0.2)
     try:
         nc = ds.m_NetSettings.GetDefaultNetclass()
         nc.SetClearance(MM(0.1))
         nc.SetTrackWidth(MM(0.2))
-        nc.SetViaDiameter(MM(0.4))
+        nc.SetViaDiameter(MM(0.3))
         nc.SetViaDrill(MM(0.2))
     except Exception:
         pass
-
-    # USB-C D-: remove autorouted stubs near the connector and route cleanly.
-    for t in list(board.GetTracks()):
-        if t.GetNetname() != "USB_DM" or not hasattr(t, "GetStart"):
-            continue
-        x1 = pcbnew.ToMM(t.GetStart().x); x2 = pcbnew.ToMM(t.GetEnd().x)
-        if x1 < 35.0 and x2 < 35.0:
-            board.Remove(t)
-    via(board, "USB_DM", 30.6, 1.03, 0.4, 0.2)
-    via(board, "USB_DM", 31.6, 1.03, 0.4, 0.2)
-    track(board, "USB_DM", pcbnew.F_Cu,
-          [(30.6, 1.03), (30.6, 1.5), (31.6, 1.5), (31.6, 1.03)], 0.2)
-    track(board, "USB_DM", pcbnew.F_Cu,
-          [(31.6, 1.03), (31.6, 1.5), (32.8, 1.5), (32.8, 3.39), (32.59, 3.39)], 0.2)
-    track(board, "USB_DM", pcbnew.F_Cu, [(32.59, 3.39), (44.9546, 2.9902)], 0.2)
 
     # GND stitching vias: bottom edge + left battery area.
     for x in [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]:

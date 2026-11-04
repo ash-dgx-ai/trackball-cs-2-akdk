@@ -1,34 +1,54 @@
 ** Drc report for controller.kicad_pcb **
-** Created on 2026-11-05T05:56:00+0900 **
+** Created on 2026-11-05T06:27:30+0900 **
 ** Report includes: Errors **
 
 ** Found 6 DRC violations **
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
-    @(55.0000 mm, 14.5000 mm): Footprint J3
-    @(50.0000 mm, 12.0000 mm): Footprint C5
+    @(36.0000 mm, 12.0000 mm): Footprint R3
+    @(36.0000 mm, 14.5000 mm): Footprint J2
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
     @(55.0000 mm, 14.5000 mm): Footprint J3
     @(50.0000 mm, 10.0000 mm): Footprint R5
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
+    @(55.0000 mm, 14.5000 mm): Footprint J3
     @(50.0000 mm, 12.0000 mm): Footprint C5
-    @(50.0000 mm, 10.0000 mm): Footprint R5
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
-    @(50.0000 mm, 12.0000 mm): Footprint C5
     @(46.0000 mm, 14.5000 mm): Footprint SW1
+    @(50.0000 mm, 12.0000 mm): Footprint C5
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
     @(50.0000 mm, 7.0000 mm): Footprint R4
     @(48.0000 mm, 5.0000 mm): Footprint D2
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
-    @(36.0000 mm, 12.0000 mm): Footprint R3
-    @(36.0000 mm, 14.5000 mm): Footprint J2
+    @(50.0000 mm, 10.0000 mm): Footprint R5
+    @(50.0000 mm, 12.0000 mm): Footprint C5
 
-** Found 0 unconnected pads **
+** Found 5 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
+    @(0.2000 mm, 0.2000 mm): Zone [GND] on B.Cu, priority 0
 
 ** Found 0 Footprint errors **
 

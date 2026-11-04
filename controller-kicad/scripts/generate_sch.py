@@ -48,7 +48,7 @@ add("E73", "U1", "E73-2G4M08S1C", "controller:E73-2G4M08S1C", "C356849", [
 
 add("USB_C", "J1", "USB-C", "controller:USB_C", "C165948", [
     ("A1B12", "GND", "GND"), ("A4B9", "VBUS", "VBUS"), ("A5", "CC1", "CC1"),
-    ("A6", "DP1", "USB_DP"), ("A7", "DN1", "USB_DM"), ("A8", "SBU1", None),
+    ("A6", "DP1", None), ("A7", "DN1", None), ("A8", "SBU1", None),
     ("B1A12", "GND", "GND"), ("B4A9", "VBUS", "VBUS"), ("B5", "CC2", "CC2"),
     ("B6", "DP2", "USB_DP"), ("B7", "DN2", "USB_DM"), ("B8", "SBU2", None),
     (1, "SHIELD", "GND"), (2, "SHIELD", "GND"), (3, "SHIELD", "GND"), (4, "SHIELD", "GND"),
@@ -74,10 +74,9 @@ add("FFC", "J3", "FFC 6P 0.5mm", "controller:FFC_6P", "C202118", [
     (7, "MP", "GND"), (8, "MP", "GND"),
 ])
 
-add("SWD", "J4", "SWD", "Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical", "", [
-    (1, "VCC", "3V3"), (2, "SWDIO", "SWDIO"), (3, "GND", "GND"),
-    (4, "SWCLK", "SWCLK"), (5, "GND", "GND"), (6, "NC", None),
-    (7, "NC", None), (8, "NC", None), (9, "GND", "GND"), (10, "RESET", "P0.18"),
+add("TEST", "J4", "Pogo test pads", "controller:TestPads_6x2.54", "", [
+    (1, "VTref", "3V3"), (2, "SWDIO", "SWDIO"), (3, "SWCLK", "SWCLK"),
+    (4, "GND", "GND"), (5, "RESET", "P0.18"), (6, "GND", "GND"),
 ])
 
 add("CON", "J5", "Conthrough 2x9", "controller:Conthrough_2x9", "", [

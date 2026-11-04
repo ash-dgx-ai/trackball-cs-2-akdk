@@ -16,6 +16,10 @@ Auto-KDK README).
   centred in the opening. The 3D check shows the connector top is about
   0.17 mm above the case opening top; sand the opening by ~0.2 mm or lower the
   board by ~0.2 mm if it is tight.
+- USB-C data: only the B6/B7 side is connected (A6/A7 are left open) because
+  the A/B pad bridge is too tight in this small connector area. Power, CC and
+  charging work in both plug orientations; if USB data does not enumerate,
+  flip the USB-C plug.
 - The same board is used for the right half by flipping it over (the main PCB
   SIDE1/SIDE2 variants are different net assignments, not different boards).
 
@@ -48,9 +52,25 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 
 ## Bootloader / firmware
 
-- The board uses the Adafruit nRF52 UF2 bootloader. Flash it once via SWD
-  (J4, 2x5 1.27 mm header). The header is not in the JLCPCB BOM; hand-solder it
-  or use pogo pads.
+- The board uses the Adafruit nRF52 UF2 bootloader. Flash it once via the
+  solderless 6-pin 2.54 mm pogo test pads (J4). No header or extra parts are
+  needed.
+- Pogo pad mapping (pad 1 is the pad nearest the top edge; the row is on the
+  left edge, 5 mm from the board edge, within the 25 mm clip depth):
+
+  | Pogo pad | Signal | Pico H connection |
+  |---|---|---|
+  | 1 | VTref (3.3 V) | 3V3 (optional reference/power) |
+  | 2 | SWDIO | GPIO3 |
+  | 3 | SWCLK | GPIO2 |
+  | 4 | GND | GND |
+  | 5 | RESET (P0.18) | GPIO4 (optional) |
+  | 6 | GND | GND |
+
+  The Pico H runs the `debugprobe` firmware (SWCLK=GPIO2, SWDIO=GPIO3,
+  RESET=GPIO4). Use female-female jumper wires from the Pico H header to the
+  pogo clip. The clip clamps the left board edge; the 2.54 mm pitch pads are
+  2.0 mm diameter with 0.54 mm gaps, so adjacent clip pins do not short.
 - After the bootloader is flashed, power switch OFF + USB enters the UF2
   bootloader. Copy the ZMK UF2 built from the `trackball-cs-2-akdk` repo.
 - The E73-2G4M08S1C exposes all GPIOs used by the `akdk_bt1` DTS except P1.15
@@ -66,8 +86,8 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 - PCB: 98 x 29 mm, 2 layers, 1.6 mm, HASL, default solder mask.
 - PCBA: **Bottom side**. The BOM includes the JST PH battery connector and the
   ALPS DPDT switch (THT). JLCPCB THT assembly may be available; otherwise
-  hand-solder those two parts. The SWD header J4 and the conthrough J5 are not
-  in the BOM.
+  hand-solder those two parts. The pogo test pads J4 and the conthrough J5 are not
+  in the BOM (bare copper pads).
 - All BOM LCSC parts were in stock at the time of writing:
   - C356849 E73-2G4M08S1C (472)
   - C165948 USB-C TYPE-C-31-M-12 (158981)
@@ -85,10 +105,15 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 
 ## DRC
 
-- 0 unconnected items, 0 footprint errors.
+- 0 electrical unconnected pads, 0 footprint errors.
 - 6 courtyard overlaps remain (R3/J2, R4/D2, R5/C5/J3, C5/SW1). These are
   non-electrical; adjust the placement in KiCad if desired. The board is fully
   routed.
+- The GND copper pour has 5 isolated islands reported by DRC. Add GND stitching
+  vias in KiCad if you want a single continuous ground; the board is functional
+  as-is.
+- The pogo test pads J4 are bare copper pads on the top side, 5 mm from the
+  left edge, 2.54 mm pitch, 2.0 mm diameter. They are excluded from BOM/CPL.
 
 ## Files
 

@@ -55,10 +55,8 @@ def main():
         assign(board, "J1", n, "VBUS")
     assign(board, "J1", "A5", "CC1")
     assign(board, "J1", "B5", "CC2")
-    for n in ["A6", "B6"]:
-        assign(board, "J1", n, "USB_DP")
-    for n in ["A7", "B7"]:
-        assign(board, "J1", n, "USB_DM")
+    assign(board, "J1", "B6", "USB_DP")
+    assign(board, "J1", "B7", "USB_DM")
 
     # --- E73 module (pin numbers are module pads) ---
     mod = {
@@ -95,10 +93,9 @@ def main():
     for n, net in ffc.items():
         assign(board, "J3", n, net)
 
-    # --- SWD header ---
-    swd = {1: "3V3", 2: "SWDIO", 3: "GND", 4: "SWCLK", 5: "GND",
-           6: None, 7: None, 8: None, 9: "GND", 10: "P0.18"}
-    for n, net in swd.items():
+    # --- 6-pin 2.54 mm pogo test pads ---
+    j4 = {1: "3V3", 2: "SWDIO", 3: "SWCLK", 4: "GND", 5: "P0.18", 6: "GND"}
+    for n, net in j4.items():
         assign(board, "J4", n, net)
 
     # --- Passives ---

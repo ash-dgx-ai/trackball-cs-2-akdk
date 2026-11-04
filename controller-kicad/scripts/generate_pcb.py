@@ -79,8 +79,8 @@ def main():
     bat = load_fp(PRETTY, "JST_PH_2P", "J2", "Battery PH2", "C131337", 36.0, 14.5, 0.0, True)
     sw = load_fp(PRETTY, "SW_DPDT", "SW1", "DPDT", "C97434", 46.0, 14.5, 0.0, True)
     ffc = load_fp(PRETTY, "FFC_6P", "J3", "FFC 6P 0.5mm", "C202118", 55.0, 14.5, 270.0, True)
-    swd = load_fp(os.path.join(KICAD_FP, "Connector_PinHeader_1.27mm.pretty"),
-                  "PinHeader_2x05_P1.27mm_Vertical", "J4", "SWD", "", 75.0, 4.0, 0.0, True)
+    test = load_fp(PRETTY, "TestPads_6x2.54", "J4", "Pogo test pads", "", 0.0, 0.0, 0.0, False)
+    test.SetAttributes(test.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
     con = load_fp(PRETTY, "Conthrough_2x9", "J5", "Conthrough 2x9", "", 0.0, 0.0, 0.0, False)
     con.SetAttributes(con.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
 

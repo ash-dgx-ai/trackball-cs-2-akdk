@@ -35,4 +35,4 @@ A reverse-engineered KiCad design compatible with this keyboard is in
 - Ebyte E73-2G4M08S1C (JLCPCB C356849), TP4057 charger, USB-C, PH battery
   connector, trackball FFC, DPDT power switch
 - JLCPCB Gerbers/BOM/CPL are included in `controller-kicad/`
-- Flash the Adafruit nRF52 UF2 bootloader via SWD (J4) before use.
+- Flash the Adafruit nRF52 UF2 bootloader via the solderless 6-pin 2.54 mm pogo test pads (J4) before use.
