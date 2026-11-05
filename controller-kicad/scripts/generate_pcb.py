@@ -75,7 +75,7 @@ def main():
     # Main components
     usb = load_fp(PRETTY, "USB_C", "J1", "USB-C", "C165948", 30.85, 3.5, 0.0, True, False)
     mod = load_fp(PRETTY, "E73-2G4M08S1C", "U1", "E73-2G4M08S1C", "C356849", 87.0, 14.5, 270.0, True)
-    tp = load_fp(PRETTY, "TP4057", "U2", "TP4057", "C725791", 39.0, 8.0, 0.0, True)
+    tp = load_fp(PRETTY, "MCP73831_SOT-23-5", "U2", "MCP73831", "C14879", 39.0, 8.0, 0.0, True)
     bat = load_fp(PRETTY, "JST_PH_2P", "J2", "Battery PH2", "C131337", 36.0, 14.5, 0.0, True)
     sw = load_fp(PRETTY, "SW_DPDT", "SW1", "DPDT", "C97434", 46.0, 14.5, 0.0, True)
     ffc = load_fp(PRETTY, "FFC_6P", "J3", "FFC 6P 0.5mm", "C202118", 55.0, 14.5, 270.0, True)

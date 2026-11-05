@@ -28,6 +28,9 @@
     (component "LED_0603_1608Metric"
       (place LED1 890000 -15000 back 180)
     )
+    (component "MCP73831_SOT-23-5"
+      (place U2 390000 -80000 back 0)
+    )
     (component "R_0603_1608Metric"
       (place R2 240000 -50000 back 270)
       (place R4 500000 -70000 back 270)
@@ -38,9 +41,6 @@
     )
     (component "SW_DPDT"
       (place SW1 460000 -145000 back 0)
-    )
-    (component "TP4057"
-      (place U2 390000 -80000 back 0)
     )
     (component "TestPads_6x2.54"
       (place J4 0 0 front 0)

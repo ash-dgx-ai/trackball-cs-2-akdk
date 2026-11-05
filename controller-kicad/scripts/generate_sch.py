@@ -54,9 +54,9 @@ add("USB_C", "J1", "USB-C", "controller:USB_C", "C165948", [
     (1, "SHIELD", "GND"), (2, "SHIELD", "GND"), (3, "SHIELD", "GND"), (4, "SHIELD", "GND"),
 ])
 
-add("TP4057", "U2", "TP4057", "controller:TP4057", "C725791", [
-    (1, "CHRG", "CHRG"), (2, "GND", "GND"), (3, "BAT", "VBAT"),
-    (4, "VCC", "VBUS"), (5, "STDBY", None), (6, "PROG", "PROG"),
+add("MCP73831", "U2", "MCP73831", "controller:MCP73831_SOT-23-5", "C14879", [
+    (1, "STAT", "CHRG"), (2, "GND", "GND"), (3, "BAT", "VBAT"),
+    (4, "VCC", "VBUS"), (6, "PROG (5)", "PROG"),
 ])
 
 add("BAT", "J2", "Battery PH2", "controller:JST_PH_2P", "C131337", [
@@ -101,12 +101,17 @@ PASSIVES = [
     ("C3", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "3V3", "GND"),
     ("C5", "0.1uF", "Capacitor_SMD:C_0603_1608Metric", "C14663", "ADC", "GND"),
     ("C6", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "VBUS", "GND"),
-    ("D1", "SS14", "Diode_SMD:D_SMA", "C2480", "VBUS", "VDDH"),
-    ("D2", "SS14", "Diode_SMD:D_SMA", "C2480", "VBAT_SW", "VDDH"),
-    ("LED1", "Green", "LED_SMD:LED_0603_1608Metric", "C2986031", "LED_A", "GND"),
+    # Diode/LED footprint pad 1 = cathode (K), pad 2 = anode (A).
+    ("D1", "SS14", "Diode_SMD:D_SMA", "C2480", "VDDH", "VBUS"),
+    ("D2", "SS14", "Diode_SMD:D_SMA", "C2480", "VDDH", "VBAT_SW"),
+    ("LED1", "Green", "LED_SMD:LED_0603_1608Metric", "C2986031", "GND", "LED_A"),
 ]
 for ref, val, fp, lcsc, n1, n2 in PASSIVES:
-    add(ref, ref, val, fp, lcsc, [(1, "1", n1), (2, "2", n2)])
+    if ref.startswith("D") or ref == "LED1":
+        pins = [(1, "K", n1), (2, "A", n2)]
+    else:
+        pins = [(1, "1", n1), (2, "2", n2)]
+    add(ref, ref, val, fp, lcsc, pins)
 
 
 def symbol_def(name, pins, width, height):

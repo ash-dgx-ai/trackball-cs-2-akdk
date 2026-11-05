@@ -32,7 +32,8 @@ A reverse-engineered KiCad design compatible with this keyboard is in
 [`controller-kicad/`](controller-kicad/README.md).
 
 - 98.0 x 29.0 mm, 2-layer, bottom-side assembly
-- Ebyte E73-2G4M08S1C (JLCPCB C356849), TP4057 charger, USB-C, PH battery
+- Ebyte E73-2G4M08S1C (JLCPCB C356849), MCP73831 4.2V charger, USB-C, PH battery
   connector, trackball FFC, DPDT power switch
 - JLCPCB Gerbers/BOM/CPL are included in `controller-kicad/`
 - Flash the Adafruit nRF52 UF2 bootloader via the solderless 6-pin 2.54 mm pogo test pads (J4) before use.
+- The blank E73 starts at 1.8 V (REGOUT0 default); use a VTref-sensing or level-shifted probe for the first SWD write.

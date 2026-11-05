@@ -77,8 +77,8 @@ def main():
     for n, net in mod.items():
         assign(board, "U1", n, net)
 
-    # --- TP4057 ---
-    tp = {1: "CHRG", 2: "GND", 3: "VBAT", 4: "VBUS", 5: None, 6: "PROG"}
+    # --- MCP73831 (4.2 V).  Pad 6 is the physical PROG pin 5; pad 5 is absent. ---
+    tp = {1: "CHRG", 2: "GND", 3: "VBAT", 4: "VBUS", 6: "PROG"}
     for n, net in tp.items():
         assign(board, "U2", n, net)
 
