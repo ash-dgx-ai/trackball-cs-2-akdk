@@ -104,7 +104,9 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   REGOUT0 = 1.8 V, so VDD and the SWD pins are at 1.8 V. A 3.3 V probe can
   overdrive them. Use a debugger with VTref sensing and level shifting, or a
   1.8 V-compatible probe, for the first write. J4 pad 1 is the target VDD
-  sense point; do **not** connect the Pico's 3V3 output to it.
+  sense point; do **not** connect the Pico's 3V3 output to it. For a
+  Pico-based first write, use a bidirectional level shifter (e.g., TXS0102
+  or 74LVC2T45) with VCCA = J4 pad 1 (1.8 V) and VCCB = Pico 3V3, common GND.
 - Flash a bootloader build that defines `UICR_REGOUT0_VALUE = 3V3` (for
   example the nice_nano or pillbug build). The bootloader sets REGOUT0 and
   resets; verify 3.3 V on C3. If the chosen build does not set REGOUT0,
@@ -184,7 +186,9 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   overlaps (bounding boxes; check the 3D preview), silkscreen overlaps/
   clipping, and 15 GND stitching vias that connect only to one pour. The
   stitching vias are intentional; they are not electrically dangling. The
-  C7/J1 overlap is a courtyard-only warning; the USB-C body ends below C7.
+  C7/J1 and C2/U1 overlaps are courtyard-only warnings: the USB-C body ends
+  below C7, and C2's body ends at 80.2 mm while the E73 body starts at
+  80.5 mm. C2 pad 1 overlaps the U1 VDDH pad by design (same net).
 - The dense routing splits the B.Cu GND pour into islands. `scripts/stitch_zones.py`
   adds GND stitching vias so every island connects to the main GND; run it
   after `patch_pcb.py` when rebuilding. Skipping it leaves the ground pour

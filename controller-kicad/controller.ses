@@ -3,7 +3,7 @@
   (placement
     (resolution um 10)
     (component "C_0603_1608Metric"
-      (place C2 805000 -80000 back 0)
+      (place C2 794000 -80000 back 0)
       (place C5 500000 -120000 back 0)
       (place C1 805000 -50000 back 0)
       (place C6 390000 -30000 back 0)

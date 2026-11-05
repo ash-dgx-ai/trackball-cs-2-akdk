@@ -191,6 +191,7 @@ def main():
     led_a = padpos(board, "LED1", "2")  # LED_A
     c7_1 = padpos(board, "C7", "1")   # VBAT
     u2_3 = padpos(board, "U2", "3")   # VBAT
+    c2_1 = padpos(board, "C2", "1")   # VDDH
 
     delete_nets(board, {"USB_DP", "USB_DM", "P1.06", "LED_A"})
 
@@ -247,6 +248,11 @@ def main():
     # --- P0.12: the SES route ends just short of U1 pad 20. -------------
     track(board, "P0.12", pcbnew.B_Cu,
           [p20, (82.7417, 13.23)], 0.2)
+
+    # --- C2 moved left to clear the E73 module body. --------------------
+    # The SES still has the old C2 pad-1 track at x=79.73; join the new pad
+    # to it around the C2 GND pad.
+    track(board, "VDDH", pcbnew.B_Cu, [c2_1, (81.3, 8.0)], 0.2)
 
     # --- MCP73831 VBAT bypass capacitor C7. -----------------------------
     # 10 uF on VBAT; the GND pad is connected by the B.Cu pour.
