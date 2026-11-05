@@ -49,8 +49,11 @@ holes.
 - MCP73831 4.2 V single-cell charger (LCSC C14879), 6.2 k PROG resistor
   (~160 mA). The TP4057 was replaced because its 4.24 V termination is above
   the usual 4.20 V Li-Po limit. The charger footprint is a 5-pad SOT-23-5 land
-  pattern: pad 6 is the physical PROG pin (pin 5); pad 5 is absent. Do not
-  substitute a 6-pin TP4057 without checking this mapping.
+  pattern; PROG is pad 5.
+- Charger bypass capacitors: C6 = 10 uF on VBUS and C7 = 10 uF on VBAT
+  (LCSC C19702, 0603, 10 V). This meets the MCP73831 4.7 uF recommendation
+  with margin; check the selected part's DC-bias curve at 5 V/4.2 V. C7 is
+  placed next to U2 and connected to VBAT with a short B.Cu trace.
 - Power switch: DPDT. OFF grounds P0.13 and disconnects the battery; USB then
   powers VDDH through a Schottky diode. Grounding P0.13 is the DFU pin only on
   bootloader builds that use it; see the bootloader section.
@@ -63,6 +66,16 @@ holes.
 - A blank E73 has REGOUT0 = 1.8 V, so VDD (the 3V3 rail) is 1.8 V until the
   UICR is programmed. After the bootloader/firmware sets REGOUT0 to 3.3 V,
   verify 3.3 V on C3 before connecting the trackball FFC.
+- **Battery operation / REG0 dropout**: VDDH = VBAT minus the D2 Schottky
+  drop. REG0 regulates 3.3 V only while VDDH is at least about 3.6 V; below
+  that it is in dropout and the 3V3 rail follows VDDH (roughly 2.6-3.0 V at
+  the battery cutoff). The nRF52840 itself remains within its 1.8-3.6 V
+  supply range, and the trackball module's 1.8 V sensor supply should remain
+  in regulation, but the 3.3 V rail is not regulated. Measure VDDH/VDD at the
+  battery low-voltage cutoff and check the trackball module's minimum VDDIO.
+  If the module requires a regulated 3.3 V, add a boost converter (or use a
+  higher-voltage supply); otherwise the existing high-voltage/LDO mode is
+  acceptable.
 
 ## Trackball FFC
 
@@ -141,6 +154,7 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   - C356849 E73-2G4M08S1C (472)
   - C165948 USB-C TYPE-C-31-M-12 (158981)
   - C14879 MCP73831 (4.2 V charger, in stock)
+  - C19702 10uF 0603 10V (C6/C7 charger bypass, in stock)
   - C131337 JST PH 2P (215233)
   - C202118 FH12-6S-0.5SH (2179)
   - C97434 ALPS SSSS820101 DPDT (2131)
@@ -148,11 +162,13 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   - C2480 SS14 (1713221)
   - C23186 5.1k, C4260 6.2k, C22976 2M, C22935 1M, C21190 1k, C15849 1uF,
     C14663 0.1uF (all basic/stock)
-- **Via-in-pad**: the USB-C D+/D- pads and the P1.06 pads use via-in-pad
-  (0.4/0.2 mm and 0.6/0.3 mm). For PCBA, select resin-filled and copper-capped
-  vias (IPC-4761 Type VII) or confirm JLCPCB's via-in-pad capability. If that
-  option is unavailable, the vias can be moved outside the pads with a short
-  fan-out; the USB-C pads are only 0.3 mm wide.
+- **Via-in-pad**: the USB-C D+/D- pads still use 0.4/0.2 mm via-in-pad.
+  Moving them outside the 0.3 mm pads conflicts with the CC1/CC2 fan-out, so
+  the verified geometry is kept. For the 2-layer JLCPCB order, select the
+  **Via in Pad** option (resin-filled and copper-capped, IPC-4761 Type VII)
+  and confirm the price/availability; if it is unavailable, the USB-C vias
+  must be moved. The P1.06 vias have been moved outside the U1/R6 pads, so
+  only the USB-C vias need the special process.
 - The CPL rotations are KiCad rotations. Check the JLCPCB placement preview;
   bottom-side rotations may need adjustment. The KiCad **Fabrication Toolkit**
   plugin can generate a JLCPCB-ready CPL if desired.
@@ -164,10 +180,11 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 - Run `scripts/set_drc_severity.py` after the PCB pipeline: KiCad rewrites
   the project when a board is saved, which resets courtyard overlaps to
   error. The script keeps them as warnings.
-- Full-severity DRC still reports non-electrical warnings: 10 courtyard
+- Full-severity DRC still reports non-electrical warnings: 11 courtyard
   overlaps (bounding boxes; check the 3D preview), silkscreen overlaps/
   clipping, and 15 GND stitching vias that connect only to one pour. The
-  stitching vias are intentional; they are not electrically dangling.
+  stitching vias are intentional; they are not electrically dangling. The
+  C7/J1 overlap is a courtyard-only warning; the USB-C body ends below C7.
 - The dense routing splits the B.Cu GND pour into islands. `scripts/stitch_zones.py`
   adds GND stitching vias so every island connects to the main GND; run it
   after `patch_pcb.py` when rebuilding. Skipping it leaves the ground pour
@@ -186,10 +203,12 @@ Run with the KiCad AppImage Python (see the scripts for the exact paths):
    `export_ses.py` to freeze the new session.
 3. `finish_pcb.py` — restores GND and adds the copper pours. Do not import the
    SES here again; `route_pcb.py` already did it.
-4. `patch_pcb.py` — USB-C D+/D-, LED/P1.06, P0.12 stub, GND stitching.
+4. `patch_pcb.py` — USB-C D+/D-, LED/P1.06, C7 VBAT, P0.12 stub, GND stitching.
 5. `stitch_zones.py` — connects the remaining GND pour islands.
 6. `set_drc_severity.py` — keeps courtyard overlaps as warnings before the
    final DRC report.
+7. `update_lcsc.py` is optional; it refreshes the LCSC fields from the table
+   above (U2=MCP73831/C14879, C6/C7=C19702).
 
 Then run `kicad-cli pcb drc --severity-error`, and export Gerbers/drill,
 BOM/CPL, STEP and PDFs with `kicad-cli` and `generate_bom_cpl.py`.
@@ -203,6 +222,6 @@ BOM/CPL, STEP and PDFs with `kicad-cli` and `generate_bom_cpl.py`.
 - `jlcpcb_bom.csv`, `jlcpcb_cpl.csv` — JLCPCB PCBA files
 - `controller_sch.pdf`, `controller_pcb_front.pdf`, `controller_pcb_back.pdf`
 - `controller.step` — 3D model for case/USB verification
-- `controller.pretty/MCP73831_SOT-23-5.kicad_mod` — 5-pad charger footprint
+- `controller.pretty/MCP73831_SOT-23-5.kicad_mod` — 5-pad charger footprint (PROG=pad 5)
 - `controller.3dshapes/SOT-23-5.wrl`, `controller.3dshapes/SOT-23-5.step`
 - `scripts/` — generation/route/BOM/DRC scripts

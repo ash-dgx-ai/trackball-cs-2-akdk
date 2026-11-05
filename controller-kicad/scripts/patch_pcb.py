@@ -189,10 +189,15 @@ def main():
     r6_1 = padpos(board, "R6", "1")   # P1.06
     r6_2 = padpos(board, "R6", "2")   # LED_A
     led_a = padpos(board, "LED1", "2")  # LED_A
+    c7_1 = padpos(board, "C7", "1")   # VBAT
+    u2_3 = padpos(board, "U2", "3")   # VBAT
 
     delete_nets(board, {"USB_DP", "USB_DM", "P1.06", "LED_A"})
 
     # --- USB-C: via-in-pad for both plug orientations. ------------------
+    # The pads are 0.3 mm wide on a 0.5 mm pitch.  Moving the vias outside
+    # conflicts with the CC1/CC2 fan-out, so keep the verified via-in-pad
+    # geometry and require JLCPCB resin fill/cap for PCBA.
     for p in (a6, b6, a7, b7):
         via(board, "USB_DP" if p in (a6, b6) else "USB_DM",
             p[0], p[1], 0.4, 0.2)
@@ -227,17 +232,26 @@ def main():
           [(84.0, 5.4), p29], 0.2)
 
     # --- LED: U1 pad 42 (P1.06) -> R6 -> LED1. --------------------------
-    # Keep the LED vertical at x = 94.7, right of the P0.09/P0.10 fan-out.
-    via(board, "P1.06", p42[0], p42[1])
+    # Move both vias outside the pads so there is no via-in-pad.
+    u1_via = (94.6, p42[1])
+    r6_via = (92.5, 2.8)
+    track(board, "P1.06", pcbnew.B_Cu, [p42, u1_via], 0.2)
+    via(board, "P1.06", u1_via[0], u1_via[1], 0.4, 0.2)
     track(board, "P1.06", pcbnew.F_Cu,
-          [p42, (94.7, p42[1]), (94.7, 2.5), (r6_1[0], 2.5), r6_1], 0.2)
-    via(board, "P1.06", r6_1[0], r6_1[1])
+          [u1_via, (94.6, 2.8), r6_via], 0.2)
+    via(board, "P1.06", r6_via[0], r6_via[1], 0.4, 0.2)
+    track(board, "P1.06", pcbnew.B_Cu, [r6_via, r6_1], 0.2)
     track(board, "LED_A", pcbnew.B_Cu,
           [r6_2, (r6_2[0], 0.8), (led_a[0], 0.8), led_a], 0.2)
 
     # --- P0.12: the SES route ends just short of U1 pad 20. -------------
     track(board, "P0.12", pcbnew.B_Cu,
           [p20, (82.7417, 13.23)], 0.2)
+
+    # --- MCP73831 VBAT bypass capacitor C7. -----------------------------
+    # 10 uF on VBAT; the GND pad is connected by the B.Cu pour.
+    track(board, "VBAT", pcbnew.B_Cu,
+          [c7_1, (36.8, 9.0), (36.8, 7.05), u2_3], 0.2)
 
     # --- GND stitching vias (bottom edge + left battery area). ----------
     for x in [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]:

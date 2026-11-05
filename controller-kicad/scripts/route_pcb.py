@@ -77,8 +77,8 @@ def main():
     for n, net in mod.items():
         assign(board, "U1", n, net)
 
-    # --- MCP73831 (4.2 V).  Pad 6 is the physical PROG pin 5; pad 5 is absent. ---
-    tp = {1: "CHRG", 2: "GND", 3: "VBAT", 4: "VBUS", 6: "PROG"}
+    # --- MCP73831 (4.2 V) ---
+    tp = {1: "CHRG", 2: "GND", 3: "VBAT", 4: "VBUS", 5: "PROG"}
     for n, net in tp.items():
         assign(board, "U2", n, net)
 
@@ -114,6 +114,7 @@ def main():
     assign(board, "C3", 1, "3V3"); assign(board, "C3", 2, "GND")
     assign(board, "C5", 1, "ADC"); assign(board, "C5", 2, "GND")
     assign(board, "C6", 1, "VBUS"); assign(board, "C6", 2, "GND")
+    assign(board, "C7", 1, "VBAT"); assign(board, "C7", 2, "GND")
     # KiCad diode footprint pad 1 = cathode (K), pad 2 = anode (A)
     assign(board, "D1", 1, "VDDH"); assign(board, "D1", 2, "VBUS")
     assign(board, "D2", 1, "VDDH"); assign(board, "D2", 2, "VBAT_SW")
