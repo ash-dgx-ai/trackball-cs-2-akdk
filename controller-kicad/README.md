@@ -54,6 +54,8 @@ holes.
   tied together on the board; the 3V3 rail is the module's VDD output.
 - Battery polarity: J2 pin 1 = +, pin 2 = -. Verify the battery lead polarity
   before plugging it in.
+- On first power-up, verify 3.3 V on C3 (the module VDD output) before
+  connecting the trackball FFC.
 
 ## Trackball FFC
 
