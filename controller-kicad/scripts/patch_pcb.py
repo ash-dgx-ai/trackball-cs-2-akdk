@@ -192,8 +192,13 @@ def main():
     c7_1 = padpos(board, "C7", "1")   # VBAT
     u2_3 = padpos(board, "U2", "3")   # VBAT
     c2_1 = padpos(board, "C2", "1")   # VDDH
+    c6_1 = padpos(board, "C6", "1")   # VBUS
+    c8_1 = padpos(board, "C8", "1")   # VBUS
+    c9_1 = padpos(board, "C9", "1")   # VBAT
+    r3_1 = padpos(board, "R3", "1")   # PROG
+    u2_5 = padpos(board, "U2", "5")   # PROG
 
-    delete_nets(board, {"USB_DP", "USB_DM", "P1.06", "LED_A"})
+    delete_nets(board, {"USB_DP", "USB_DM", "P1.06", "LED_A", "PROG"})
 
     # --- USB-C: via-in-pad for both plug orientations. ------------------
     # The pads are 0.3 mm wide on a 0.5 mm pitch.  Moving the vias outside
@@ -253,6 +258,15 @@ def main():
     # The SES still has the old C2 pad-1 track at x=79.73; join the new pad
     # to it around the C2 GND pad.
     track(board, "VDDH", pcbnew.B_Cu, [c2_1, (81.3, 8.0)], 0.2)
+
+    # --- Additional charger bypass capacitors C8/C9. --------------------
+    track(board, "VBUS", pcbnew.B_Cu,
+          [c8_1, (c8_1[0], 2.2), (c6_1[0], 2.2), c6_1], 0.2)
+    track(board, "VBAT", pcbnew.B_Cu,
+          [c9_1, (c9_1[0], 8.2), (c7_1[0], 8.2), c7_1], 0.2)
+
+    # --- R3 (PROG) moved away from the J2 body. -------------------------
+    track(board, "PROG", pcbnew.B_Cu, [u2_5, r3_1], 0.2)
 
     # --- MCP73831 VBAT bypass capacitor C7. -----------------------------
     # 10 uF on VBAT; the GND pad is connected by the B.Cu pour.

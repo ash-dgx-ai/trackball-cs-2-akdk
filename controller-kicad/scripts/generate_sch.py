@@ -98,10 +98,12 @@ PASSIVES = [
     ("R6", "1k", "Resistor_SMD:R_0603_1608Metric", "C21190", "P1.06", "LED_A"),
     ("C1", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "VDDH", "GND"),
     ("C2", "0.1uF", "Capacitor_SMD:C_0603_1608Metric", "C14663", "VDDH", "GND"),
-    ("C3", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "3V3", "GND"),
+    ("C3", "4.7uF", "Capacitor_SMD:C_0603_1608Metric", "C19666", "3V3", "GND"),
     ("C5", "0.1uF", "Capacitor_SMD:C_0603_1608Metric", "C14663", "ADC", "GND"),
     ("C6", "10uF", "Capacitor_SMD:C_0603_1608Metric", "C19702", "VBUS", "GND"),
     ("C7", "10uF", "Capacitor_SMD:C_0603_1608Metric", "C19702", "VBAT", "GND"),
+    ("C8", "10uF", "Capacitor_SMD:C_0603_1608Metric", "C19702", "VBUS", "GND"),
+    ("C9", "10uF", "Capacitor_SMD:C_0603_1608Metric", "C19702", "VBAT", "GND"),
     # Diode/LED footprint pad 1 = cathode (K), pad 2 = anode (A).
     ("D1", "SS14", "Diode_SMD:D_SMA", "C2480", "VDDH", "VBUS"),
     ("D2", "SS14", "Diode_SMD:D_SMA", "C2480", "VDDH", "VBAT_SW"),

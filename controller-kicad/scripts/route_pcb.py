@@ -115,6 +115,8 @@ def main():
     assign(board, "C5", 1, "ADC"); assign(board, "C5", 2, "GND")
     assign(board, "C6", 1, "VBUS"); assign(board, "C6", 2, "GND")
     assign(board, "C7", 1, "VBAT"); assign(board, "C7", 2, "GND")
+    assign(board, "C8", 1, "VBUS"); assign(board, "C8", 2, "GND")
+    assign(board, "C9", 1, "VBAT"); assign(board, "C9", 2, "GND")
     # KiCad diode footprint pad 1 = cathode (K), pad 2 = anode (A)
     assign(board, "D1", 1, "VDDH"); assign(board, "D1", 2, "VBUS")
     assign(board, "D2", 1, "VDDH"); assign(board, "D2", 2, "VBAT_SW")

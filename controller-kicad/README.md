@@ -50,10 +50,11 @@ holes.
   (~160 mA). The TP4057 was replaced because its 4.24 V termination is above
   the usual 4.20 V Li-Po limit. The charger footprint is a 5-pad SOT-23-5 land
   pattern; PROG is pad 5.
-- Charger bypass capacitors: C6 = 10 uF on VBUS and C7 = 10 uF on VBAT
-  (LCSC C19702, 0603, 10 V). This meets the MCP73831 4.7 uF recommendation
-  with margin; check the selected part's DC-bias curve at 5 V/4.2 V. C7 is
-  placed next to U2 and connected to VBAT with a short B.Cu trace.
+- Charger bypass capacitors: C6/C8 = 10 uF each on VBUS and C7/C9 = 10 uF
+  each on VBAT (LCSC C19702, 0603, 10 V), i.e. 20 uF nominal per rail.
+  This meets the MCP73831 4.7 uF recommendation even after DC-bias derating;
+  verify the effective value at 5 V/4.2 V. C7/C9 are connected to VBAT with
+  short B.Cu traces. C8 is at (37.0, 1.8) and C9 at (32.4, 10.0).
 - Power switch: DPDT. OFF grounds P0.13 and disconnects the battery; USB then
   powers VDDH through a Schottky diode. Grounding P0.13 is the DFU pin only on
   bootloader builds that use it; see the bootloader section.
@@ -63,6 +64,10 @@ holes.
   tied together on the board; the 3V3 rail is the module's VDD output.
 - Battery polarity: J2 pin 1 = +, pin 2 = -. Verify the battery lead polarity
   before plugging it in.
+- C3 is 4.7 uF (LCSC C19666, 0603 16 V) on the 3V3/VDD rail. The nRF52840
+  VDD decoupling target is 2.7-5.5 uF effective including the E73 module's
+  internal capacitors; C3 alone is not the whole sum. Verify the total with
+  the E73 module data.
 - A blank E73 has REGOUT0 = 1.8 V, so VDD (the 3V3 rail) is 1.8 V until the
   UICR is programmed. After the bootloader/firmware sets REGOUT0 to 3.3 V,
   verify 3.3 V on C3 before connecting the trackball FFC.
@@ -76,6 +81,11 @@ holes.
   If the module requires a regulated 3.3 V, add a boost converter (or use a
   higher-voltage supply); otherwise the existing high-voltage/LDO mode is
   acceptable.
+- **External 3V3 load**: in high-voltage mode the nRF52840 can supply only
+  about 25 mA externally at <=4 dBm (5 mA above 4 dBm, 1 mA in System OFF).
+  Measure the trackball module's worst-case current. If it exceeds 25 mA, or
+  a regulated 3.3 V is required, add an independent 3.3 V regulator; do not
+  rely on the E73 VDD output alone.
 
 ## Trackball FFC
 
@@ -105,8 +115,12 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   overdrive them. Use a debugger with VTref sensing and level shifting, or a
   1.8 V-compatible probe, for the first write. J4 pad 1 is the target VDD
   sense point; do **not** connect the Pico's 3V3 output to it. For a
-  Pico-based first write, use a bidirectional level shifter (e.g., TXS0102
-  or 74LVC2T45) with VCCA = J4 pad 1 (1.8 V) and VCCB = Pico 3V3, common GND.
+  Pico-based first write, use a bidirectional level shifter. TXS0102 is
+  auto-direction but must be verified at the SWD clock/load. A single
+  74LVC2T45 is **not** suitable: its two channels share DIR, while SWCLK is
+  one-way and SWDIO is bidirectional. Use two 74LVC1T45 (one per line) or a
+  TXS0102 with VCCA = J4 pad 1 (1.8 V) and VCCB = Pico 3V3, common GND. The
+  most reliable option is a debugger with native 1.8 V VTref/level shifting.
 - Flash a bootloader build that defines `UICR_REGOUT0_VALUE = 3V3` (for
   example the nice_nano or pillbug build). The bootloader sets REGOUT0 and
   resets; verify 3.3 V on C3. If the chosen build does not set REGOUT0,
@@ -134,6 +148,9 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   nice_nano build has no DFU button and uses the 1200-baud touch instead. If
   OFF + USB does not enter UF2, use the 1200-baud touch (or the reset pad)
   rather than assuming P0.13 works.
+- The trackball SPI overlay was changed from `nordic,nrf-spim` to
+  `nordic,nrf-spi` as a PAW3222 compatibility precaution; verify on hardware.
+  The ZMK left/right build and input test are still pending.
 - After the bootloader is flashed, copy the ZMK UF2 built from the
   `trackball-cs-2-akdk` repo.
 - The E73-2G4M08S1C exposes all GPIOs used by the `akdk_bt1` DTS except P1.15
@@ -151,12 +168,14 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 - PCBA: **Bottom side**. The BOM includes the JST PH battery connector and the
   ALPS DPDT switch (THT). JLCPCB THT assembly may be available; otherwise
   hand-solder those two parts. The pogo test pads J4 and the conthrough J5 are
-  not in the BOM (J4 is bare copper; J5 is a THT mechanical part).
+  not in the BOM (J4 is bare copper; J5 is a THT mechanical part). The SWD
+  pogo connection is solderless, but J5, J2 and SW1 still require soldering.
 - All BOM LCSC parts were in stock at the time of writing:
   - C356849 E73-2G4M08S1C (472)
   - C165948 USB-C TYPE-C-31-M-12 (158981)
   - C14879 MCP73831 (4.2 V charger, in stock)
-  - C19702 10uF 0603 10V (C6/C7 charger bypass, in stock)
+  - C19702 10uF 0603 10V (C6/C7/C8/C9 charger bypass, in stock)
+  - C19666 4.7uF 0603 16V (C3 VDD decoupling, in stock)
   - C131337 JST PH 2P (215233)
   - C202118 FH12-6S-0.5SH (2179)
   - C97434 ALPS SSSS820101 DPDT (2131)
@@ -182,13 +201,14 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 - Run `scripts/set_drc_severity.py` after the PCB pipeline: KiCad rewrites
   the project when a board is saved, which resets courtyard overlaps to
   error. The script keeps them as warnings.
-- Full-severity DRC still reports non-electrical warnings: 11 courtyard
+- Full-severity DRC still reports non-electrical warnings: 12 courtyard
   overlaps (bounding boxes; check the 3D preview), silkscreen overlaps/
   clipping, and 15 GND stitching vias that connect only to one pour. The
   stitching vias are intentional; they are not electrically dangling. The
-  C7/J1 and C2/U1 overlaps are courtyard-only warnings: the USB-C body ends
-  below C7, and C2's body ends at 80.2 mm while the E73 body starts at
-  80.5 mm. C2 pad 1 overlaps the U1 VDDH pad by design (same net).
+  R3/J2 body overlap was fixed by moving R3 to x=40.5 mm. The C7/J1,
+  C8/C9/J1 and C2/U1 overlaps are courtyard-only: the USB-C body ends below
+  C7/C9, C8 is clear of C6, and C2's body ends at 80.2 mm while the E73 body
+  starts at 80.5 mm. C2 pad 1 overlaps the U1 VDDH pad by design (same net).
 - The dense routing splits the B.Cu GND pour into islands. `scripts/stitch_zones.py`
   adds GND stitching vias so every island connects to the main GND; run it
   after `patch_pcb.py` when rebuilding. Skipping it leaves the ground pour

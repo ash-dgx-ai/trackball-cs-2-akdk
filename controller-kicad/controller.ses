@@ -36,7 +36,7 @@
       (place R2 240000 -50000 back 270)
       (place R5 500000 -100000 back 270)
       (place R6 910000 -25000 back 0)
-      (place R3 360000 -120000 back 0)
+      (place R3 405000 -120000 back 0)
       (place R4 500000 -70000 back 270)
     )
     (component "SW_DPDT"
