@@ -21,6 +21,7 @@ GND_PADS = {
     "SW1": ["6"],
     "J3": ["1", "7", "8"],
     "J4": ["4", "6"],
+    "J5": ["17"],
     "R1": ["2"], "R2": ["2"], "R3": ["2"], "R5": ["2"],
     "C1": ["2"], "C2": ["2"], "C3": ["2"], "C4": ["2"], "C5": ["2"], "C6": ["2"],
     "LED1": ["1"],
@@ -61,7 +62,6 @@ def add_antenna_keepout(board):
 
 def main():
     board = pcbnew.LoadBoard(PCB)
-    pcbnew.ImportSpecctraSES(board, SES)
 
     gnd = board.FindNet("GND")
     if gnd is None:

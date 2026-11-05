@@ -55,7 +55,10 @@ def main():
         assign(board, "J1", n, "VBUS")
     assign(board, "J1", "A5", "CC1")
     assign(board, "J1", "B5", "CC2")
+    # Both plug orientations: A6/B6 = D+, A7/B7 = D-.
+    assign(board, "J1", "A6", "USB_DP")
     assign(board, "J1", "B6", "USB_DP")
+    assign(board, "J1", "A7", "USB_DM")
     assign(board, "J1", "B7", "USB_DM")
 
     # --- E73 module (pin numbers are module pads) ---
@@ -69,7 +72,7 @@ def main():
         27: "VBUS", 28: "P0.15", 29: "USB_DM", 30: None,
         31: "USB_DP", 32: "P0.20", 33: "P0.13", 34: "P0.22",
         35: "P0.24", 36: "P1.00", 37: "SWDIO", 38: None,
-        39: "SWCLK", 40: None, 41: "P0.09", 42: None, 43: "P0.10",
+        39: "SWCLK", 40: None, 41: "P0.09", 42: "P1.06", 43: "P0.10",
     }
     for n, net in mod.items():
         assign(board, "U1", n, net)
@@ -104,7 +107,8 @@ def main():
     assign(board, "R3", 1, "PROG"); assign(board, "R3", 2, "GND")
     assign(board, "R4", 1, "VBAT"); assign(board, "R4", 2, "ADC")
     assign(board, "R5", 1, "ADC"); assign(board, "R5", 2, "GND")
-    assign(board, "R6", 1, "P0.18"); assign(board, "R6", 2, "LED_A")
+    # LED on a free GPIO (P1.06), not on the RESET/P0.18 line.
+    assign(board, "R6", 1, "P1.06"); assign(board, "R6", 2, "LED_A")
     assign(board, "C1", 1, "VDDH"); assign(board, "C1", 2, "GND")
     assign(board, "C2", 1, "VDDH"); assign(board, "C2", 2, "GND")
     assign(board, "C3", 1, "3V3"); assign(board, "C3", 2, "GND")
@@ -131,7 +135,8 @@ def main():
     ds.m_ViasMinSize = pcbnew.FromMM(0.6)
     ds.m_ViasMinDrill = pcbnew.FromMM(0.3)
 
-    # Do not ask Freerouting to route GND; a copper pour will do that later.
+    # GND is left to the copper pours.  The THT conthrough pads are handled by
+    # patch_pcb.py (direct B.Cu stitching), so no GND net is sent to Freerouting.
     gnd_pads = []
     for fp in board.GetFootprints():
         for p in fp.Pads():
@@ -143,10 +148,14 @@ def main():
     pcbnew.ExportSpecctraDSN(board, DSN)
     print("Exported", DSN)
 
-    # Run Freerouting headless.
-    cmd = FREEROUTING + ["-de", DSN, "-do", SES, "-mp", "50", "-mt", "1"]
-    print("Running:", " ".join(cmd))
-    subprocess.run(cmd, check=True)
+    # Freerouting is not deterministic.  If a verified session is committed,
+    # reuse it; set REROUTE=1 to force a fresh autoroute.
+    if os.path.exists(SES) and os.environ.get("REROUTE", "0") != "1":
+        print("Reusing", SES)
+    else:
+        cmd = FREEROUTING + ["-de", DSN, "-do", SES, "-mp", "50", "-mt", "1"]
+        print("Running:", " ".join(cmd))
+        subprocess.run(cmd, check=True)
 
     # Import the routed session and restore the GND pads.
     board2 = pcbnew.LoadBoard(PCB)

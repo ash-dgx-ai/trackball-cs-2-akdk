@@ -43,12 +43,12 @@ add("E73", "U1", "E73-2G4M08S1C", "controller:E73-2G4M08S1C", "C356849", [
     (32, "P0.20", "P0.20"), (33, "P0.13", "P0.13"), (34, "P0.22", "P0.22"),
     (35, "P0.24", "P0.24"), (36, "P1.00", "P1.00"), (37, "SWDIO", "SWDIO"),
     (38, "P1.02", None), (39, "SWDCLK", "SWCLK"), (40, "P1.04", None),
-    (41, "P0.09", "P0.09"), (42, "P1.06", None), (43, "P0.10", "P0.10"),
+    (41, "P0.09", "P0.09"), (42, "P1.06", "P1.06"), (43, "P0.10", "P0.10"),
 ])
 
 add("USB_C", "J1", "USB-C", "controller:USB_C", "C165948", [
     ("A1B12", "GND", "GND"), ("A4B9", "VBUS", "VBUS"), ("A5", "CC1", "CC1"),
-    ("A6", "DP1", None), ("A7", "DN1", None), ("A8", "SBU1", None),
+    ("A6", "DP1", "USB_DP"), ("A7", "DN1", "USB_DM"), ("A8", "SBU1", None),
     ("B1A12", "GND", "GND"), ("B4A9", "VBUS", "VBUS"), ("B5", "CC2", "CC2"),
     ("B6", "DP2", "USB_DP"), ("B7", "DN2", "USB_DM"), ("B8", "SBU2", None),
     (1, "SHIELD", "GND"), (2, "SHIELD", "GND"), (3, "SHIELD", "GND"), (4, "SHIELD", "GND"),
@@ -79,13 +79,13 @@ add("TEST", "J4", "Pogo test pads", "controller:TestPads_6x2.54", "", [
     (4, "GND", "GND"), (5, "RESET", "P0.18"), (6, "GND", "GND"),
 ])
 
-add("CON", "J5", "Conthrough 2x9", "controller:Conthrough_2x9", "", [
+add("CON", "J5", "Conthrough 2x9 THT", "controller:Conthrough_2x9_THT", "", [
     (1, "1", "P0.10"), (2, "2", "P0.09"), (3, "3", "P1.00"),
     (4, "4", "P0.24"), (5, "5", "P0.22"), (6, "6", "P0.20"),
     (7, "7", None), (8, "8", None), (9, "9", None), (10, "10", None),
     (11, "11", "P0.08"), (12, "12", "P0.06"), (13, "13", "P0.26"),
     (14, "14", "P0.31"), (15, "15", "P0.29"), (16, "16", "P0.02"),
-    (17, "17", None), (18, "18", "P1.13"),
+    (17, "17", "GND"), (18, "18", "P1.13"),
 ])
 
 # Passives: (ref, value, footprint, lcsc, pin1 net, pin2 net)
@@ -95,14 +95,14 @@ PASSIVES = [
     ("R3", "6.2k", "Resistor_SMD:R_0603_1608Metric", "C4260", "PROG", "GND"),
     ("R4", "2M", "Resistor_SMD:R_0603_1608Metric", "C22976", "VBAT", "ADC"),
     ("R5", "1M", "Resistor_SMD:R_0603_1608Metric", "C22935", "ADC", "GND"),
-    ("R6", "1k", "Resistor_SMD:R_0603_1608Metric", "C21190", "P0.18", "LED_A"),
+    ("R6", "1k", "Resistor_SMD:R_0603_1608Metric", "C21190", "P1.06", "LED_A"),
     ("C1", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "VDDH", "GND"),
     ("C2", "0.1uF", "Capacitor_SMD:C_0603_1608Metric", "C14663", "VDDH", "GND"),
     ("C3", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "3V3", "GND"),
     ("C5", "0.1uF", "Capacitor_SMD:C_0603_1608Metric", "C14663", "ADC", "GND"),
     ("C6", "1uF", "Capacitor_SMD:C_0603_1608Metric", "C15849", "VBUS", "GND"),
-    ("D1", "SS14", "Diode_SMD:D_SOD-323", "C2480", "VBUS", "VDDH"),
-    ("D2", "SS14", "Diode_SMD:D_SOD-323", "C2480", "VBAT_SW", "VDDH"),
+    ("D1", "SS14", "Diode_SMD:D_SMA", "C2480", "VBUS", "VDDH"),
+    ("D2", "SS14", "Diode_SMD:D_SMA", "C2480", "VBAT_SW", "VDDH"),
     ("LED1", "Green", "LED_SMD:LED_0603_1608Metric", "C2986031", "LED_A", "GND"),
 ]
 for ref, val, fp, lcsc, n1, n2 in PASSIVES:

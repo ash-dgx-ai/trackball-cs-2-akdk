@@ -81,10 +81,10 @@ def main():
     ffc = load_fp(PRETTY, "FFC_6P", "J3", "FFC 6P 0.5mm", "C202118", 55.0, 14.5, 270.0, True)
     test = load_fp(PRETTY, "TestPads_6x2.54", "J4", "Pogo test pads", "", 0.0, 0.0, 0.0, False)
     test.SetAttributes(test.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
-    con = load_fp(PRETTY, "Conthrough_2x9", "J5", "Conthrough 2x9", "", 0.0, 0.0, 0.0, False)
+    con = load_fp(PRETTY, "Conthrough_2x9_THT", "J5", "Conthrough 2x9 THT", "", 0.0, 0.0, 0.0, False)
     con.SetAttributes(con.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
 
-    # Passives (0603 / SOD-323).  Values are set later after checking the schematic.
+    # Passives (0603 / SMA).  Values are set later after checking the schematic.
     r_lib = os.path.join(KICAD_FP, "Resistor_SMD.pretty")
     c_lib = os.path.join(KICAD_FP, "Capacitor_SMD.pretty")
     led_lib = os.path.join(KICAD_FP, "LED_SMD.pretty")
@@ -96,23 +96,29 @@ def main():
         return load_fp(c_lib, "C_0603_1608Metric", ref, val, lcsc, x, y, rot, True)
     def led(ref, val, lcsc, x, y, rot=0.0):
         return load_fp(led_lib, "LED_0603_1608Metric", ref, val, lcsc, x, y, rot, True)
+    # SS14 (C2480) is SMA / DO-214AC, not SOD-323.
     def d(ref, val, lcsc, x, y, rot=0.0):
-        return load_fp(d_lib, "D_SOD-323", ref, val, lcsc, x, y, rot, True)
+        return load_fp(d_lib, "D_SMA", ref, val, lcsc, x, y, rot, True)
 
     r("R1", "5.1k", "C23186", 22.0, 5.0, 90)
     r("R2", "5.1k", "C23186", 24.0, 5.0, 90)
     r("R3", "6.2k", "C4260", 36.0, 12.0, 0)
     r("R4", "2M", "C22976", 50.0, 7.0, 90)
     r("R5", "1M", "C22935", 50.0, 10.0, 90)
-    r("R6", "1k", "C21190", 81.0, 3.5, 0)
-    c("C1", "1uF", "C15849", 78.5, 5.0, 0)
-    c("C2", "0.1uF", "C14663", 78.5, 8.0, 0)
+    r("R6", "1k", "C21190", 91.0, 2.5, 0)
+    c("C1", "1uF", "C15849", 80.5, 5.0, 0)
+    c("C2", "0.1uF", "C14663", 80.5, 8.0, 0)
     c("C3", "1uF", "C15849", 88.0, 4.0, 0)
     c("C5", "0.1uF", "C14663", 50.0, 12.0, 0)
     c("C6", "1uF", "C15849", 39.0, 3.0, 0)
     d("D1", "SS14", "C2480", 40.0, 5.0, 0)
-    d("D2", "SS14", "C2480", 48.0, 5.0, 0)
-    led("LED1", "Green", "C2986031", 80.0, 2.0, 0)
+    d("D2", "SS14", "C2480", 49.5, 4.4, 0)
+    led("LED1", "Green", "C2986031", 89.0, 1.5, 180)
+
+    # The E73 runs in high-voltage mode: VDDH is fed from the battery/USB
+    # through the Schottky diodes, and VDD is the module's internal 3.3 V
+    # regulator output that feeds the 3V3 rail.  VDD and VDDH are NOT tied
+    # together on the board; DCCH is left unconnected (LDO mode).
 
     pcbnew.SaveBoard(OUT, board)
     print("Saved", OUT)

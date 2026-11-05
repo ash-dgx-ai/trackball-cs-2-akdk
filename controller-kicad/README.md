@@ -14,25 +14,19 @@ Auto-KDK README).
 
 ### Conthrough (KONSHU / コンスルー) mounting
 
-The Conthrough used by this project is the 9-pin, 1.27 mm pitch, H2.5 mm type
-(コンスルー 9ピン, 1.27 mm, 高さ2.5 mm). It is **SMD**: it is reflow-soldered onto
-the pads and plugs into a matching socket on the main PCB. There are **no
-holes** for it, and none are needed.
+The Conthrough used by this project is the 9-pin, 1.27 mm pitch, H2.5 mm
+**through-hole** type (コンスルー 9ピン, 1.27 mm, 高さ2.5 mm). J5 is a 2 x 9
+plated-through-hole footprint (0.7 mm drill, 1.1 mm pad, 1.27 mm pitch,
+19.0 mm between rows) on the top side. Solder the Conthrough pins into these
+holes.
 
-- Pad geometry: 1.3 x 1.07 mm pads on a 1.27 mm pitch, 19.0 mm between rows.
-  This matches the Conthrough 9-pin footprint (1.27 mm pitch, ~1.0 mm wide
-  solder pads with 1.27 mm pitch spacing).
-- The pads are on the **top side** (F.Cu / F.Mask), bare copper with no paste.
-  They are **not** part of the JLCPCB assembly; solder them yourself, or ask
-  JLCPCB to add a stencil opening for the top side (a top-side stencil is
-  normally needed because the PCBA order is bottom-side only).
-- The Conthrough body is about 2.5 mm tall and sits between the controller
-  board and the main PCB. Keep the top-side area around the pads free of tall
-  parts: there are no top-side components at all, so there is no interference.
-- The pads are not plated through-holes, so the Conthrough cannot be inserted
-  through the board. If you prefer a through-hole style, the pads can be
-  replaced with 1.0 mm holes + 1.6 mm annular rings at the same coordinates;
-  the Conthrough 9-pin SMD type does not need this.
+- Hole/pad geometry: 0.7 mm finished hole, 1.1 mm pad, 1.27 mm pitch, 19.0 mm
+  row spacing. The 1.1 mm pad leaves 0.17 mm between adjacent pads, above the
+  0.1 mm clearance used by this board.
+- The pads are plated through-holes, so the Conthrough is mechanically strong.
+  Solder on the bottom side (all other components are also on the bottom).
+- J5 is excluded from the JLCPCB BOM/CPL; it is a mechanical part. The board
+  itself is ordered with the through-holes, so no extra drilling is needed.
 - Board thickness is 1.6 mm. Conthrough H2.5 mm is designed for a 1.6 mm board
   plus a 0.9 mm gap; verify the gap to the main PCB after assembly.
 - USB-C: 30.85 mm from the left edge, on the top edge. The left case opening
@@ -40,10 +34,11 @@ holes** for it, and none are needed.
   centred in the opening. The 3D check shows the connector top is about
   0.17 mm above the case opening top; sand the opening by ~0.2 mm or lower the
   board by ~0.2 mm if it is tight.
-- USB-C data: only the B6/B7 side is connected (A6/A7 are left open) because
-  the A/B pad bridge is too tight in this small connector area. Power, CC and
-  charging work in both plug orientations; if USB data does not enumerate,
-  flip the USB-C plug.
+- USB-C data: both plug orientations are supported. A6/B6 (D+) and A7/B7
+  (D-) are tied with 0.4 mm via-in-pad and short F.Cu bridges. USB_DM is
+  routed manually on F.Cu because Freerouting could not fit both data nets in
+  the available corridor. Power, CC and charging also work in both
+  orientations.
 - The same board is used for the right half by flipping it over (the main PCB
   SIDE1/SIDE2 variants are different net assignments, not different boards).
 
@@ -53,6 +48,10 @@ holes** for it, and none are needed.
 - TP4057 charger, 6.2 k PROG resistor (~193 mA).
 - Power switch: DPDT. OFF grounds P0.13 (the Adafruit bootloader DFU pin) and
   disconnects the battery; USB then powers VDDH through a Schottky diode.
+- The E73 runs in **high-voltage mode**: VDDH is fed from the battery/USB
+  through the Schottky diodes (D1/D2), and VDD is the module's internal 3.3 V
+  LDO output (DC/DC disabled, DCCH unconnected). VDD and VDDH are **not**
+  tied together on the board; the 3V3 rail is the module's VDD output.
 - Battery polarity: J2 pin 1 = +, pin 2 = -. Verify the battery lead polarity
   before plugging it in.
 
@@ -99,8 +98,9 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
   bootloader. Copy the ZMK UF2 built from the `trackball-cs-2-akdk` repo.
 - The E73-2G4M08S1C exposes all GPIOs used by the `akdk_bt1` DTS except P1.15
   (connector pad 17), which is unused by the firmware. No firmware change is
-  required for the matrix/trackball mapping. The module's internal DC/DC is
-  used; DCCH is left unconnected as in the E73 reference design.
+  required for the matrix/trackball mapping. The module runs in high-voltage
+  mode with its internal LDO; DCCH is left unconnected as in the E73 reference
+  design.
 
 ## JLCPCB order
 
@@ -110,8 +110,8 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 - PCB: 98 x 29 mm, 2 layers, 1.6 mm, HASL, default solder mask.
 - PCBA: **Bottom side**. The BOM includes the JST PH battery connector and the
   ALPS DPDT switch (THT). JLCPCB THT assembly may be available; otherwise
-  hand-solder those two parts. The pogo test pads J4 and the conthrough J5 are not
-  in the BOM (bare copper pads).
+  hand-solder those two parts. The pogo test pads J4 and the conthrough J5 are
+  not in the BOM (J4 is bare copper; J5 is a THT mechanical part).
 - All BOM LCSC parts were in stock at the time of writing:
   - C356849 E73-2G4M08S1C (472)
   - C165948 USB-C TYPE-C-31-M-12 (158981)
@@ -129,15 +129,34 @@ The trackball module's own pinout is 1=3.3V, 2=CS, 3=MOTION, 4=SDIO, 5=SCLK,
 
 ## DRC
 
-- 0 electrical unconnected pads, 0 footprint errors.
-- 6 courtyard overlaps remain (R3/J2, R4/D2, R5/C5/J3, C5/SW1). These are
-  non-electrical; adjust the placement in KiCad if desired. The board is fully
-  routed.
-- The GND copper pour has 5 isolated islands reported by DRC. Add GND stitching
-  vias in KiCad if you want a single continuous ground; the board is functional
-  as-is.
+- `kicad-cli pcb drc --severity-error`: **0 violations, 0 unconnected pads,
+  0 footprint errors**.
+- Full-severity DRC still reports non-electrical warnings: 10 courtyard
+  overlaps, silkscreen overlaps/clipping, and 15 dangling vias. These do not
+  affect fabrication.
+- The dense routing splits the B.Cu GND pour into islands. `scripts/stitch_zones.py`
+  adds GND stitching vias so every island connects to the main GND; run it
+  after `patch_pcb.py` when rebuilding. Skipping it leaves the ground pour
+  split.
 - The pogo test pads J4 are bare copper pads on the top side, 5 mm from the
   left edge, 2.54 mm pitch, 2.0 mm diameter. They are excluded from BOM/CPL.
+
+## Rebuild
+
+Run with the KiCad AppImage Python (see the scripts for the exact paths):
+
+1. `generate_pcb.py`
+2. `route_pcb.py` — assigns nets and imports `controller.ses`. The committed
+   session is reused by default so the verified routing is reproducible. Set
+   `REROUTE=1` to run Freerouting again; after a fresh route, run
+   `export_ses.py` to freeze the new session.
+3. `finish_pcb.py` — restores GND and adds the copper pours. Do not import the
+   SES here again; `route_pcb.py` already did it.
+4. `patch_pcb.py` — USB-C D+/D-, LED/P1.06, P0.12 stub, GND stitching.
+5. `stitch_zones.py` — connects the remaining GND pour islands.
+
+Then export Gerbers/drill, BOM/CPL, STEP and PDFs with `kicad-cli` and
+`generate_bom_cpl.py`.
 
 ## Files
 
