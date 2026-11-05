@@ -11,6 +11,30 @@ Auto-KDK README).
 - All components are on the **bottom side** (the side opposite the
   conthrough pads). Order JLCPCB PCBA with **Bottom side** assembly.
 - Conthrough pads: 2 x 9, 1.27 mm pitch, 19.0 mm row spacing, on the top side.
+
+### Conthrough (KONSHU / コンスルー) mounting
+
+The Conthrough used by this project is the 9-pin, 1.27 mm pitch, H2.5 mm type
+(コンスルー 9ピン, 1.27 mm, 高さ2.5 mm). It is **SMD**: it is reflow-soldered onto
+the pads and plugs into a matching socket on the main PCB. There are **no
+holes** for it, and none are needed.
+
+- Pad geometry: 1.3 x 1.07 mm pads on a 1.27 mm pitch, 19.0 mm between rows.
+  This matches the Conthrough 9-pin footprint (1.27 mm pitch, ~1.0 mm wide
+  solder pads with 1.27 mm pitch spacing).
+- The pads are on the **top side** (F.Cu / F.Mask), bare copper with no paste.
+  They are **not** part of the JLCPCB assembly; solder them yourself, or ask
+  JLCPCB to add a stencil opening for the top side (a top-side stencil is
+  normally needed because the PCBA order is bottom-side only).
+- The Conthrough body is about 2.5 mm tall and sits between the controller
+  board and the main PCB. Keep the top-side area around the pads free of tall
+  parts: there are no top-side components at all, so there is no interference.
+- The pads are not plated through-holes, so the Conthrough cannot be inserted
+  through the board. If you prefer a through-hole style, the pads can be
+  replaced with 1.0 mm holes + 1.6 mm annular rings at the same coordinates;
+  the Conthrough 9-pin SMD type does not need this.
+- Board thickness is 1.6 mm. Conthrough H2.5 mm is designed for a 1.6 mm board
+  plus a 0.9 mm gap; verify the gap to the main PCB after assembly.
 - USB-C: 30.85 mm from the left edge, on the top edge. The left case opening
   is centred at x = -18.25 mm, z = -5.75 mm; the connector is horizontally
   centred in the opening. The 3D check shows the connector top is about
